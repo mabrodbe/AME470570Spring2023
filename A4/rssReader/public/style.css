@@ -1,0 +1,181 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#rssListWrapper {
+    width: 20vw;
+    height: 100vh;
+    overflow: auto;
+    padding: 0;
+    margin: 0;
+    background-color: #9bf2ff;
+    float: left;
+}
+
+#itemListWrapper {
+    width: 30vw;
+    height: 100vh;
+    overflow: auto;
+    padding: 0;
+    margin: 0;
+    background-color: #9bf2ff;
+    float: left;
+}
+
+#itemDetails {
+    width: 50vw;
+    height: 100vh;
+    position: left;
+    right: 0;
+    max-height: 100vh;
+    overflow: auto;
+    text-align: center;
+    background-color:#9bf2ff
+}
+
+#rssListWrapper>button {
+    width: 100%;
+}
+
+#itemListWrapper>button {
+    margin: 0 10px 0 10px;
+}
+
+#rssList>button {
+    width: 100%;
+
+    color:rgb(244, 183, 236);
+    -webkit-text-stroke: .2px;
+    -webkit-text-stroke-color: black;
+}
+
+#rssList>button h1 {
+    font-size: 20px;
+    padding: 0;
+    margin: 0;
+    margin-top: 10px;
+    font-weight: bold;
+    
+}
+
+
+button:focus {
+    background:rgb(250, 255, 186)
+}
+#itemList button {
+    width: 100%;
+    height: 100px;
+    padding: 0;
+    color:aliceblue;
+    -webkit-text-stroke: .3px;
+    -webkit-text-stroke-color: black;
+}
+
+#itemList button img {
+    float: left;
+}
+
+#itemList button h1 {
+    text-overflow: ellipsis;
+    word-break: break-word;
+    overflow: hidden;
+    max-height: 30px;
+    font-size: 20px;
+    white-space: nowrap;
+    text-align: left;
+    padding-left: 10px;
+    margin-top: 20px;
+}
+
+#itemList button h2 {
+    text-overflow: ellipsis;
+    word-break: break-word;
+    overflow: hidden;
+    height: 30px;
+    white-space: nowrap;
+    text-align: left;
+    margin:0;
+    padding: 0;
+    padding-left: 10px;
+    margin-top: -20px;
+    font-size: 16px;
+}
+
+#backButton{
+    display: none;
+  }
+  #backButton1{
+    display: none;
+  }
+
+  button.selected{
+    background: #7865f3;
+
+}
+
+
+@media screen and (max-width: 600px) { /* for "small" screens */
+    #rssListWrapper{
+      width: 100vw;
+    }
+    #itemListWrapper{
+      width: 100vw;
+      position: relative;
+    }
+    body.details #backButton{
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: auto;
+      height: 36px;
+      background: lightgray;
+      border: none;
+      font-size: 20px;
+      font-size: 20px;
+    }
+    body.ItemList #backButton1{
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: auto;
+        height: 36px;
+        background: lightgray;
+        border: none;
+        font-size: 20px;
+        margin-left:110px;
+      }
+
+    #itemDetails{
+      display: none;
+      width:auto;
+    }
+    #itemListWrapper{
+      display: block;
+    }
+    body.details #rssListWrapper{
+        display: none;
+      }    
+    body.details #itemListWrapper{
+      display: none;
+    }    
+
+    body.details #itemDetails{
+      display: block;
+    }
+
+    body.ItemList #rssListWrapper{
+        display: none;
+      }    
+    body.ItemList #itemListWrapper{
+      display: block;
+    }    
+
+    body.ItemList #itemDetails{
+      display: none;
+    }
+  }
+
+

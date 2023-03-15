@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> RSS Reader</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="asyncReq.js"></script>
+        <meta viewport="width=device-width, initial-scale=1, user-scalable=no">      
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">          
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body onload="loadAllFeeds()">
+        <div id="rssListWrapper">  
+            <button class="btn waves-effect purple lighten-1" onclick="addNew()">Add New
+                <i class="material-icons left">add_circle</i>
+              </button>
+              <div id="rssList">
+                </div>
+        </div>
+
+        <div id="itemListWrapper">
+            <button class="btn waves-effect purple lighten-1" onclick="editCurrFeed()">Edit
+                <i class="material-icons left">edit</i>
+              </button>
+              <button class="btn waves-effect waves-light red" style="float:right" onclick="deleteItem()"> Delete
+                <i class="material-icons left">remove</i>
+              </button>
+                <div id="itemList">
+                    </div>
+        </div>
+
+        <div id="itemDetails">
+        </div>  
+        <button class="btn waves-effect purple lighten-1" id="backButton" onclick="backClicked()">Back</button>
+        <button class="btn waves-effect purple lighten-1" id="backButton1" onclick="backClicked1()">Back</button>
+        
+    </body>
+    <script>
+
+function backClicked(){
+        document.getElementsByTagName("body")[0].className = "ItemList";
+        setTimeout(function(){
+          $("#itemList button").removeClass("selected");
+        }, 500);
+        document.getElementById("itemDetails").innerHTML  = "";
+      }
+function backClicked1(){
+        document.getElementsByTagName("body")[0].className = "";
+        setTimeout(function(){
+          $("#itemList button").removeClass("selected");
+        }, 500);
+        document.getElementById("itemDetails").innerHTML  = "";
+      }
+
+      function editCurrFeed()
+      {
+        var name = prompt("Rename RSS feed:", feeds[currentFeed].name);
+        if(name != null){
+          loadURL("/editFeed?name=" + name + "&id=" + feeds[currentFeed]._id, function(data){
+            console.log(data);
+            loadAllFeeds();
+          });
+        }
+      }
+      function addNew(){
+        var url = prompt("Enter the URL of the RSS feed you want to add");
+        if(url != null){
+          loadURL("/addFeed?url=" + url, function(data){
+            console.log(data);
+            loadAllFeeds();
+          });
+        }
+      }
+      
+      function deleteItem(index){
+  
+  var x = confirm("Are you sure you want to delete this item? (y/n)");
+  if(x){
+    // complete this function
+    var url = "./delete?id=" + feeds[currentFeed]._id;
+    loadURL(url, function(resData){
+      loadAllFeeds()
+      if(resData == "Deleted"){
+        alert("Item deleted");
+        //populateHistory();
+        //$("#history li:nth-of-type(" + (index+1) + ")").remove()
+      }
+      else{
+        alert("Something went wrong");
+      }
+    });
+  }
+  else{
+    alert("Item not deleted");
+  }
+
+}
+      var feeds;
+      var currentFeed = -1;
+      var currItem = -1;
+      
+      
+
+      function loadAllFeeds(){
+        loadURL("/getFeeds", function(data){
+          console.log(data);
+          feeds = JSON.parse(data);
+          document.getElementById("rssList").innerHTML = "";
+          for(var i = 0; i < feeds.length; i++){
+            var feed = feeds[i];
+            var feedDiv = document.createElement("button");
+            feedDiv.className = "feed";
+            feedDiv.innerHTML = "<h1>" + feed.name + "</h1>" + "<p>" + feed.url + "</p>";
+            var y = function(i){
+              var x = i;
+              return function(){
+                loadFeed(x);
+              }
+            }
+            feedDiv.onclick =  y(i);
+            
+            document.getElementById("rssList").appendChild(feedDiv);
+          }
+        });
+      }
+     
+      function loadFeed(index){
+        document.getElementsByTagName("body")[0].className = "ItemList";
+        $("#rssList button").removeClass("selected");
+        $("#rssList button:eq(" + index + ")").addClass("selected");
+
+        console.log(feeds[index], index);
+        currentFeed = index;
+        var url = "./makeHTTPReq?url=" + feeds[index].url;
+        loadURL(url, function(resData){
+           jsonObj = JSON.parse(resData);
+           generateMarkup();
+        });
+      }
+      function itemClicked(index){
+        var item = jsonObj.feed.results[index];
+          markup = 
+              "<img width=300 src='"+ item.artworkUrl100 +"'>" +
+              "<a target='_blank' href='"+ item.url + "'><h1>" + item.name + "</h1></a>" + 
+              "<a target='_blank' href='"+ item.artistUrl +"'><h2>" + item.artistName + "</h2></a>" +
+              "<p><i>"+ moment(item.releaseDate).format('MMMM Do YYYY'); + "</i></p>"
+          document.getElementById("itemDetails").innerHTML  = markup;
+          document.getElementsByTagName("body")[0].className = "details";
+          $("#itemList button").removeClass("selected");
+         $("#itemList button:nth-of-type(" + (index + 1) + ")").addClass("selected");
+      }
+      function generateMarkup()
+      {
+        var list = jsonObj.feed.results;
+        var markup = "";
+        for (var i = 0; i < list.length; i++){
+          markup += "<button onclick='itemClicked("+ i +")'>" +
+              "<img src='"+ list[i].artworkUrl100 +"'>" +
+              "<h1>" + list[i].name + "</h1>" + 
+              "<h2>" + list[i].artistName + "</h2>" + 
+            "</button>";
+        }
+
+
+        
+
+        console.log(markup);
+        document.getElementById("itemList").innerHTML  = markup;
+      }
+      
+      </script>
+</html>
