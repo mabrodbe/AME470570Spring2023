@@ -1,4 +1,7 @@
-# Assignment 4
+Corras Note:
+The Add and Delete buttons work if you wait a bit for them to respond! They will auto-populate like they are supposed to.
+
+Assignment 4
 
 Due March 15th before class
 
