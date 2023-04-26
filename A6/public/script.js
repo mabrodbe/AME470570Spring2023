@@ -91,6 +91,15 @@ function saveProfilePic()
     });
     
 }
+function addPeer()
+{
+    var peer = prompt("Enter Peer Email")
+    if(peer){
+        $.get("/addPeer", {peer: peer}, function(data){
+            console.log(data);
+        });
+    }
+}
 
 function saveImage()
 {
